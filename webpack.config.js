@@ -15,6 +15,7 @@ module.exports = {
     new htmlWebpackPlugin({
       template: "./src/index.html",
       inject: "head",
+      scriptLoading: "blocking", // 改为阻塞加载，确保监听器先注册
     }),
   ],
 };

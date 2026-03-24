@@ -11,25 +11,47 @@ function getLines(stack) {
 }
 export function injectJsError() {
   console.log("正在注入js错误监控...");
-  window.addEventListener("error", function (event) {
-    let lastEvent = getLastEvent(); //最后一个交互事件
-    console.log("捕获到js错误:", event);
-    console.log("最后一个交互事件:", lastEvent);
-    // 这里可以将错误信息发送到服务器进行分析和处理
-    let log = {
-      kind: "stability", // 稳定性指标
-      type: "error", // 错误类型
-      errorType: "jsError", // js错误类型
-      url: "", // 错误发生的url
-      message: event.message, // 错误信息
-      filename: event.filename, // 发生错误的文件名
-      position: event.lineno + ":" + event.colno, // 错误发生的位置
-      stack: getLines(event.error.stack), // 错误堆栈信息
-      selector: lastEvent ? getSelector(lastEvent.composedPath()) : "", // 发生错误的元素的选择器,最后一个操作的元素
-    };
-    sendTracker.send(log);
-    console.log("错误日志:", log);
-  });
+  window.addEventListener(
+    "error",
+    function (event) {
+      console.log("捕获到js错误:", event);
+      let lastEvent = getLastEvent(); //最后一个交互事件
+      // 区分资源加载错误和JS运行时错误
+      if (event.target && event.target !== window) {
+        // 资源加载错误
+        console.log("捕获到资源加载错误:", event);
+        let log = {
+          kind: "stability",
+          type: "error",
+          errorType: "resourceError",
+          url: "",
+          filename: event.target.src || event.target.href || "",
+          tagName: event.target.tagName,
+          selector: getSelector([event.target]),
+        };
+        sendTracker.send(log);
+        console.log("资源加载错误日志:", log);
+      } else {
+        // JS运行时错误
+        console.log("捕获到运行时错误:", event);
+        console.log("最后一个交互事件:", lastEvent);
+        let log = {
+          kind: "stability",
+          type: "error",
+          errorType: "jsError",
+          url: "",
+          message: event.message,
+          filename: event.filename,
+          position: event.lineno + ":" + event.colno,
+          stack: getLines(event.error.stack),
+          selector: lastEvent ? getSelector(lastEvent.composedPath()) : "",
+        };
+        sendTracker.send(log);
+        console.log("JS错误日志:", log);
+      }
+    },
+    true,
+  );
   window.addEventListener("unhandledrejection", function (event) {
     console.log("捕获到未处理的Promise错误:", event);
     let message;

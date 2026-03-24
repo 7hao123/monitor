@@ -2,6 +2,14 @@ export default function (path) {
   console.log("path:", path);
   if (Array.isArray(path)) {
     return getSelectors(path);
+  } else {
+    let p = [];
+    // 也可能是一个对象
+    while (path) {
+      p.push(pathOrTarget);
+      pathsOrTarget = pathsOrTarget.parentNode;
+    }
+    return getSelectors(p);
   }
 }
 
