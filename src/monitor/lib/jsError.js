@@ -10,7 +10,7 @@ function getLines(stack) {
     .join("^");
 }
 export function injectJsError() {
-  console.log("正在注入js错误监控...");
+  console.log("正在监控js错误监控...");
   window.addEventListener(
     "error",
     function (event) {

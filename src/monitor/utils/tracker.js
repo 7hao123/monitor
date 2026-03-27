@@ -8,7 +8,7 @@ function getExtraData() {
 }
 export class SendTracker {
   constructor() {
-    this.url = "";
+    this.url = "/log";
     this.xhr = new XMLHttpRequest();
   }
   send(data) {
