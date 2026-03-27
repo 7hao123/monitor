@@ -8,7 +8,10 @@ export function injectXHR() {
 
   XMLHttpRequest.prototype.open = function (method, url, async) {
     // Skip collecting the log endpoint itself to avoid recursive reporting.
-    if (typeof url === "string" && url.match("/log")) {
+    if (
+      (typeof url === "string" && url.match("/log")) ||
+      url.match("/sockjs-node")
+    ) {
       this.__skipLog = true;
       return oldOpen.apply(this, arguments);
     }
@@ -29,12 +32,13 @@ export function injectXHR() {
   XMLHttpRequest.prototype.send = function (body) {
     if (this.logData && !this.__skipLog) {
       startTime = Date.now();
-
+      // xhrHttpReques的ReadyState会从0 1 2 3 4，就会进入load回调
+      // 然后根据status是否是2xx，304判断是成功还是失败
       let handler = (type) => (event) => {
         let duration = Date.now() - startTime;
         let statusText = this.statusText;
         let statusCode = this.status;
-
+        //
         sendTracker.send({
           kind: "stability",
           type: "xhr",
