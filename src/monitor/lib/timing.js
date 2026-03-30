@@ -64,3 +64,33 @@ export function timing() {
     });
   }
 }
+// 通过performance api
+// export function timing() {
+//   const observer = new PerformanceObserver((list) => {
+//     const entries = list.getEntries();
+//     const navigation = entries[0];
+
+//     if (!navigation) return;
+
+//     const metrics = {
+//       kind: "experience",
+//       type: "timing",
+
+//       connectTime: navigation.connectEnd - navigation.connectStart,
+//       ttfbTime: navigation.responseStart - navigation.requestStart,
+//       responseTime: navigation.responseEnd - navigation.responseStart,
+//       parseDOMTime: navigation.domInteractive - navigation.responseEnd,
+//       domContentLoadedTime:
+//         navigation.domContentLoadedEventEnd -
+//         navigation.domContentLoadedEventStart,
+//       loadTime: navigation.loadEventEnd - navigation.fetchStart,
+//     };
+
+//     sendTracker.send(metrics);
+//   });
+
+//   observer.observe({
+//     type: "navigation",
+//     buffered: true, // ⭐关键：能拿到历史数据
+//   });
+// }

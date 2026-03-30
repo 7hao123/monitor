@@ -1,4 +1,9 @@
-<!doctype html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>前端监控sdk</title><script src="monitor.js"></script></head><body><div id="container"><div class="content"><input id="succesBtn" type="button" value="ajax成功" onclick="sendSuccess()"/> <input id="errorBtn" type="button" value="ajax错误" onclick="sendError()"/></div></div><script>function sendSuccess() {
+<!doctype html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>前端监控sdk</title><script src="monitor.js"></script></head><body><div id="container"><div class="content"><input id="succesBtn" type="button" value="ajax成功" onclick="sendSuccess()"/> <input id="errorBtn" type="button" value="ajax错误" onclick="sendError()"/></div></div><script>// dom解析完成，即使依赖的资源没有加载完成，也会触发这个事件
+      document.addEventListener("DOMContentLoaded", () => {
+        let start = Date.now();
+        while (Date.now() - start < 1000) {}
+      });
+      function sendSuccess() {
         let xhr = new XMLHttpRequest();
         xhr.open("GET", "/success", true);
         xhr.responseType = "json";

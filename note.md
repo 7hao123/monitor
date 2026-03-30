@@ -48,3 +48,56 @@ loadEventStart(开始load回调函数)
 loadEventEnd(load结束)
 
 这些时间都是performance api里面
+
+
+# 🚀 前端性能指标体系（面试高频）
+
+## 🧱 核心加载指标
+
+| 指标 | 全称 | 含义 | 优化手段 | 推荐值 |
+|------|------|------|----------|--------|
+| FP | First Paint | 首次绘制（页面开始有变化） | 减少阻塞资源 | - |
+| FCP | First Contentful Paint | 首次内容绘制（文本/图片） | SSR、减少白屏时间 | < 1.8s |
+| LCP | Largest Contentful Paint | 最大内容渲染时间 | 图片优化、CDN、懒加载 | < 2.5s |
+
+---
+
+## ⚡ 交互体验指标
+
+| 指标 | 全称 | 含义 | 优化手段 | 推荐值 |
+|------|------|------|----------|--------|
+| FID | First Input Delay | 首次交互延迟 | 减少主线程阻塞、拆分JS | < 100ms |
+| TTI | Time to Interactive | 完全可交互时间 | 代码分割、延迟加载 | < 5s |
+| INP | Interaction to Next Paint | 所有交互响应性能（新标准） | 优化长任务、减少卡顿 | < 200ms |
+
+---
+
+## 📦 页面完整加载
+
+| 指标 | 全称 | 含义 | 优化手段 | 推荐值 |
+|------|------|------|----------|--------|
+| DCL | DOMContentLoaded | DOM解析完成 | 减少HTML复杂度 | - |
+| Load | Load Event | 所有资源加载完成 | 资源按需加载 | - |
+
+---
+
+## 📉 稳定性指标
+
+| 指标 | 全称 | 含义 | 优化手段 | 推荐值 |
+|------|------|------|----------|--------|
+| CLS | Cumulative Layout Shift | 页面抖动 | 预留尺寸、避免动态插入 | < 0.1 |
+
+
+4-4要重点看，里面知识点很多
+浏览器渲染是先render，然后再paint的，里面先render了一份，一整块画上去
+
+FMP 本质上是一个主观指标，不同页面对“有意义内容”的定义不同，因此浏览器很难标准化实现。
+Chrome 已经废弃 FMP，推荐使用 LCP 来衡量页面主要内容加载。
+在实际项目中，如果需要类似 FMP，可以通过 Element Timing API 或手动埋点来定义关键元素渲染时间。
+h1.setAttribute('elementtiming',meaningful)
+用户行为埋点
+上报策略（节流 / 批量）
+
+
+最核心的指标
+FP FCP FMP LCP CLS INP(FID)
